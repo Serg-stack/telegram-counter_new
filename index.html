@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Counter with Coin Animation</title>
+    <title>Counter with Slot Machine Animation</title>
     <style>
         body {
             display: flex;
@@ -16,7 +16,11 @@
             background: url('https://sotni.ru/wp-content/uploads/2023/08/zadnii-fon-dlia-platformera-1.webp') no-repeat center center fixed;
             background-size: cover;
             color: #fff;
-            overflow: hidden;
+        }
+        @media (max-width: 600px) {
+            body {
+                background-image: url('путь_к_изображению_для_телефона');
+            }
         }
         #user-panel {
             background-color: rgba(0, 0, 0, 0.7);
@@ -48,11 +52,6 @@
             overflow: hidden;
             position: relative;
             display: inline-block;
-            animation: count 0.5s ease-out;
-        }
-        @keyframes count {
-            from { transform: scale(1); }
-            to { transform: scale(1.2); }
         }
         #click-area {
             width: 300px;
@@ -65,16 +64,14 @@
             border-radius: 50%;
             cursor: pointer;
             user-select: none;
-            transition: transform 0.1s ease, filter 0.1s ease;
+            transition: transform 0.1s ease;
             margin: 20px 0;
-            position: relative; /* Добавлено положение относительно для абсолютного размещения */
             z-index: 10;
         }
         #click-area:hover {
             transform: scale(1.1);
-            filter: brightness(1.2); /* Добавляем эффект яркости при наведении */
         }
-        .number-animation {
+        #number-animation {
             position: absolute;
             font-size: 1em;
             opacity: 0.7;
@@ -113,16 +110,14 @@
             border: 2px solid #555;
             color: white;
             font-size: 0.9em;
-            outline: none; /* Убираем стандартный фокус */
         }
         .button:hover {
             transform: translateY(-5px);
         }
         .button:active {
             transform: translateY(0);
-        }
-        .button:focus {
-            outline: none; /* Убираем стандартный фокус */
+            background-color: #333; /* Изменим цвет на более тёмный при нажатии */
+            border-color: #333; /* Удаляем границу при нажатии */
         }
         .animate {
             animation: button-click 0.2s ease;
@@ -132,6 +127,13 @@
             50% { transform: scale(0.9); }
             100% { transform: scale(1); }
         }
+        .spin-animation {
+            animation: spin 1s ease-out;
+        }
+        @keyframes spin {
+            0% { transform: rotateX(0); }
+            100% { transform: rotateX(360deg); }
+        }
         .number-animation {
             animation: number-fly 1s forwards cubic-bezier(0.3, 0, 0.4, 1);
         }
@@ -139,26 +141,6 @@
             0% { transform: translateY(0); opacity: 1; }
             50% { transform: translateY(-100px); opacity: 1; }
             100% { transform: translateY(0); opacity: 0; }
-        }
-        @media (max-width: 600px) {
-            body {
-                background: url('https://sotni.ru/wp-content/uploads/2023/08/zadnii-fon-dlia-platformera-1.webp') no-repeat center center fixed;
-                background-size: cover;
-            }
-            #counter {
-                font-size: 2em;
-            }
-            #click-area {
-                width: 200px;
-                height: 200px;
-                background-size: cover;
-                margin: 10px 0;
-            }
-            .button {
-                width: 60px;
-                height: 30px;
-                font-size: 0.8em;
-            }
         }
     </style>
 </head>
@@ -169,22 +151,22 @@
     <div id="counter-panel">
         <div id="counter">0</div>
     </div>
-    <div id="click-area" onclick="animateClick()">
+    <div id="click-area" onclick="incrementCounter()">
     </div>
     <div class="button-panel">
-        <div class="button farm" onclick="incrementCounter(this)">
+        <div class="button farm" onclick="animateButton(this)">
             Farm
         </div>
-        <div class="button mine" onclick="incrementCounter(this)">
+        <div class="button mine" onclick="animateButton(this)">
             Mine
         </div>
-        <div class="button friend" onclick="incrementCounter(this)">
+        <div class="button friend" onclick="animateButton(this)">
             Friend
         </div>
-        <div class="button earn" onclick="incrementCounter(this)">
+        <div class="button earn" onclick="animateButton(this)">
             Earn
         </div>
-        <div class="button airdrop" onclick="incrementCounter(this)">
+        <div class="button airdrop" onclick="animateButton(this)">
             Airdrop
         </div>
     </div>
@@ -195,32 +177,12 @@
         function incrementCounter() {
             counter++;
             let numberAnimation = document.createElement('div');
-            numberAnimation.innerText = '+1';
-            numberAnimation.className = 'number-animation';
-            document.getElementById('click-area').appendChild(numberAnimation);
-
-            // Удаление числа после завершения анимации
-            setTimeout(() => {
-                numberAnimation.remove();
-            }, 1000); // Показать число на 50 мс, оставить на 950 мс и удалить его
-
-            // Обновление счётчика
-            document.getElementById('counter').innerText = counter;
-            // Анимация для счётчика
-            document.getElementById('counter').classList.remove('count-animation');
-            void document.getElementById('counter').offsetWidth; // Это для того, чтобы сбросить анимацию
-            document.getElementById('counter').classList.add('count-animation');
-        }
-
-        function animateClick() {
-            let numberAnimation = document.createElement('div');
-            numberAnimation.innerText = '+1';
-            numberAnimation.className = 'number-animation';
-
-            let clickArea = document.getElementById('click-area');
-            let clickAreaRect = clickArea.getBoundingClientRect();
+            numberAnimation.innerText = '1';
+            numberAnimation.id = 'number-animation';
+            document.body.appendChild(numberAnimation);
 
             // Случайное расположение числа рядом с клик-областью
+            let clickAreaRect = document.getElementById('click-area').getBoundingClientRect();
             let offsetX = (Math.random() - 0.5) * 100; // случайное смещение по X в пределах 100 пикселей
             let offsetY = (Math.random() - 0.5) * 100; // случайное смещение по Y в пределах 100 пикселей
             let randomX = clickAreaRect.left + clickAreaRect.width / 2 + offsetX;
@@ -229,23 +191,31 @@
             numberAnimation.style.left = randomX + 'px';
             numberAnimation.style.top = randomY + 'px';
 
-            document.body.appendChild(numberAnimation);
+            // Запуск анимации
+            setTimeout(() => {
+                numberAnimation.style.opacity = '1';
+                numberAnimation.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 50);
 
             // Удаление числа после завершения анимации
             setTimeout(() => {
-                numberAnimation.remove();
+                numberAnimation.style.opacity = '0';
+                numberAnimation.style.transform = 'translate(-50%, -50%) scale(0)';
+                setTimeout(() => {
+                    numberAnimation.remove();
+                }, 500); // После завершения анимации удалить элемент
             }, 1000); // Показать число на 50 мс, оставить на 950 мс и удалить его
 
-            // Обновление счётчика
-            counter++;
+            // Обновление счётчика (просто для демонстрации)
             document.getElementById('counter').innerText = counter;
+        }
 
-            // Анимация для счётчика
-            document.getElementById('counter').classList.remove('count-animation');
-            void document.getElementById('counter').offsetWidth; // Это для того, чтобы сбросить анимацию
-            document.getElementById('counter').classList.add('count-animation');
+        function animateButton(button) {
+            button.classList.add('animate'); // Добавление класса для анимации
+            setTimeout(() => {
+                button.classList.remove('animate'); // Удаление класса после анимации
+            }, 200);
         }
     </script>
 </body>
 </html>
-
