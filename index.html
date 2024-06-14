@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter with Slot Machine Animation</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://sotni.ru/wp-content/uploads/2023/08/zadnii-fon-dlia-platformera-1.webp') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        #user-panel {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 10px;
+            width: calc(100% - 40px);
+            max-width: 800px;
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        #username {
+            color: #fff;
+        }
+        #counter-panel {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            width: calc(100% - 40px);
+            max-width: 800px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        #counter {
+            font-size: 3em;
+            overflow: hidden;
+            position: relative;
+            display: inline-block;
+        }
+        #click-area {
+            width: 300px;
+            height: 300px;
+            background: url('https://kartinki.pics/uploads/posts/2022-12/1670573144_1-kartinkin-net-p-monetki-kartinka-vkontakte-1.png') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s ease;
+            margin: 20px 0;
+            z-index: 10;
+        }
+        #click-area:hover {
+            transform: scale(1.1);
+        }
+        #number-animation {
+            position: absolute;
+            font-size: 1em;
+            opacity: 0.7;
+            color: #000;
+            pointer-events: none;
+            z-index: 1000;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            transform: scale(0);
+        }
+        .button-panel {
+            position: fixed;
+            bottom: 10px;
+            width: calc(100% - 40px);
+            max-width: 800px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .button {
+            width: 80px;
+            height: 40px;
+            background-color: #444;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            border: 2px solid #555;
+            color: white;
+            font-size: 0.9em;
+        }
+        .button:hover {
+            transform: translateY(-5px);
+        }
+        .button:active {
+            transform: translateY(0);
+        }
+        .animate {
+            animation: button-click 0.2s ease;
+        }
+        @keyframes button-click {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        .spin-animation {
+            animation: spin 1s ease-out;
+        }
+        @keyframes spin {
+            0% { transform: rotateX(0); }
+            100% { transform: rotateX(360deg); }
+        }
+        .number-animation {
+            animation: number-fly 1s forwards cubic-bezier(0.3, 0, 0.4, 1);
+        }
+        @keyframes number-fly {
+            0% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(-100px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="user-panel">
+        <div id="username">Username</div>
+    </div>
+    <div id="counter-panel">
+        <div id="counter">0</div>
+    </div>
+    <div id="click-area" onclick="incrementCounter()">
+    </div>
+    <div class="button-panel">
+        <div class="button farm" onclick="animateButton(this)">
+            Farm
+        </div>
+        <div class="button mine" onclick="animateButton(this)">
+            Mine
+        </div>
+        <div class="button friend" onclick="animateButton(this)">
+            Friend
+        </div>
+        <div class="button earn" onclick="animateButton(this)">
+            Earn
+        </div>
+        <div class="button airdrop" onclick="animateButton(this)">
+            Airdrop
+        </div>
+    </div>
+
+    <script>
+        let counter = 0;
+
+        function incrementCounter() {
+            counter++;
+            let numberAnimation = document.createElement('div');
+            numberAnimation.innerText = '1';
+            numberAnimation.id = 'number-animation';
+            document.body.appendChild(numberAnimation);
+
+            // Случайное расположение числа рядом с клик-областью
+            let clickAreaRect = document.getElementById('click-area').getBoundingClientRect();
+            let offsetX = (Math.random() - 0.5) * 100; // случайное смещение по X в пределах 100 пикселей
+            let offsetY = (Math.random() - 0.5) * 100; // случайное смещение по Y в пределах 100 пикселей
+            let randomX = clickAreaRect.left + clickAreaRect.width / 2 + offsetX;
+            let randomY = clickAreaRect.top + clickAreaRect.height / 2 + offsetY;
+
+            numberAnimation.style.left = randomX + 'px';
+            numberAnimation.style.top = randomY + 'px';
+
+            // Запуск анимации
+            setTimeout(() => {
+                numberAnimation.style.opacity = '1';
+                numberAnimation.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 50);
+
+            // Удаление числа после завершения анимации
+            setTimeout(() => {
+                numberAnimation.style.opacity = '0';
+                numberAnimation.style.transform = 'translate(-50%, -50%) scale(0)';
+                setTimeout(() => {
+                    numberAnimation.remove();
+                }, 500); // После завершения анимации удалить элемент
+            }, 1000); // Показать число на 50 мс, оставить на 950 мс и удалить его
+
+            // Обновление счётчика (просто для демонстрации)
+            document.getElementById('counter').innerText = counter;
+        }
+
+        function animateButton(button) {
+            button.classList.add('animate'); // Добавление класса для анимации
+            setTimeout(() => {
+                button.classList.remove('animate'); // Удаление класса после анимации
+            }, 200);
+        }
+    </script>
+</body>
+</html>
