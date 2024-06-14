@@ -19,7 +19,7 @@
         }
         @media (max-width: 600px) {
             body {
-                background-image: url('путь_к_изображению_для_телефона');
+                background-image: url('https://your-phone-background-image-url.com');
             }
         }
         #user-panel {
@@ -71,16 +71,15 @@
         #click-area:hover {
             transform: scale(1.1);
         }
-        #number-animation {
+        .number-animation {
             position: absolute;
-            font-size: 1em;
-            opacity: 0.7;
-            color: #000;
+            font-size: 2em;
+            font-weight: bold;
+            color: #FFD700;
             pointer-events: none;
             z-index: 1000;
             transition: opacity 0.5s ease, transform 0.5s ease;
             text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-            transform: scale(0);
         }
         .button-panel {
             position: fixed;
@@ -116,8 +115,8 @@
         }
         .button:active {
             transform: translateY(0);
-            background-color: #333; /* Изменим цвет на более тёмный при нажатии */
-            border-color: #333; /* Удаляем границу при нажатии */
+            background-color: #333;
+            border-color: #333;
         }
         .animate {
             animation: button-click 0.2s ease;
@@ -140,7 +139,7 @@
         @keyframes number-fly {
             0% { transform: translateY(0); opacity: 1; }
             50% { transform: translateY(-100px); opacity: 1; }
-            100% { transform: translateY(0); opacity: 0; }
+            100% { transform: translateY(-200px); opacity: 0; }
         }
     </style>
 </head>
@@ -177,43 +176,39 @@
         function incrementCounter() {
             counter++;
             let numberAnimation = document.createElement('div');
-            numberAnimation.innerText = '1';
-            numberAnimation.id = 'number-animation';
+            numberAnimation.innerText = '+1';
+            numberAnimation.classList.add('number-animation');
             document.body.appendChild(numberAnimation);
 
-            // Случайное расположение числа рядом с клик-областью
             let clickAreaRect = document.getElementById('click-area').getBoundingClientRect();
-            let offsetX = (Math.random() - 0.5) * 100; // случайное смещение по X в пределах 100 пикселей
-            let offsetY = (Math.random() - 0.5) * 100; // случайное смещение по Y в пределах 100 пикселей
+            let offsetX = (Math.random() - 0.5) * 100;
+            let offsetY = (Math.random() - 0.5) * 100;
             let randomX = clickAreaRect.left + clickAreaRect.width / 2 + offsetX;
             let randomY = clickAreaRect.top + clickAreaRect.height / 2 + offsetY;
 
             numberAnimation.style.left = randomX + 'px';
             numberAnimation.style.top = randomY + 'px';
 
-            // Запуск анимации
             setTimeout(() => {
                 numberAnimation.style.opacity = '1';
                 numberAnimation.style.transform = 'translate(-50%, -50%) scale(1)';
             }, 50);
 
-            // Удаление числа после завершения анимации
             setTimeout(() => {
                 numberAnimation.style.opacity = '0';
                 numberAnimation.style.transform = 'translate(-50%, -50%) scale(0)';
                 setTimeout(() => {
                     numberAnimation.remove();
-                }, 500); // После завершения анимации удалить элемент
-            }, 1000); // Показать число на 50 мс, оставить на 950 мс и удалить его
+                }, 500);
+            }, 1000);
 
-            // Обновление счётчика (просто для демонстрации)
             document.getElementById('counter').innerText = counter;
         }
 
         function animateButton(button) {
-            button.classList.add('animate'); // Добавление класса для анимации
+            button.classList.add('animate');
             setTimeout(() => {
-                button.classList.remove('animate'); // Удаление класса после анимации
+                button.classList.remove('animate');
             }, 200);
         }
     </script>
