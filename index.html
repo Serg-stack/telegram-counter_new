@@ -12,18 +12,20 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0e68c;
+            background-color: #1E1E1E;
+            color: #FFFFFF;
         }
 
         .container {
             text-align: center;
             width: 100%;
-            max-width: 500px;
-            border: 2px solid #d2691e;
+            max-width: 400px;
             border-radius: 15px;
             padding: 20px;
-            background-color: #fff8dc;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #2C2C2E;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            position: relative;
+            height: 90vh;
         }
 
         .page {
@@ -34,12 +36,53 @@
             display: block;
         }
 
+        .header-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        .header-stat {
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #3A3A3C;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .earn-per-tap {
+            color: #FFA500;
+        }
+
+        .coins-to-levels {
+            color: #1E90FF;
+        }
+
+        .profit-per-hour {
+            color: #32CD32;
+        }
+
+        .header-stat-value {
+            display: block;
+            margin-top: 5px;
+            font-size: 20px;
+            color: white;
+        }
+
         .click-area {
-            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100% - 100px);
         }
 
         #pig-image {
-            width: 200px;
+            width: 150px;
             cursor: pointer;
             transition: transform 0.1s;
         }
@@ -48,38 +91,38 @@
             transform: scale(0.9);
         }
 
-        .stats {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        .stat {
-            margin: 10px 0;
+        .floating-text {
+            position: absolute;
+            animation: float-up 1s ease-out forwards;
+            color: #FFA500;
             font-size: 24px;
-            color: #d2691e;
             font-weight: bold;
         }
 
-        .animated-counter {
-            animation: counter 0.5s ease-in-out;
-        }
-
-        @keyframes counter {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.5); }
-            100% { transform: scale(1); }
+        @keyframes float-up {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
         }
 
         .navbar {
             display: flex;
             justify-content: space-around;
-            margin-top: 20px;
+            padding: 10px 0;
+            background-color: #2C2C2E;
+            border-radius: 10px;
+            position: absolute;
+            bottom: 0;
+            width: calc(100% - 40px);
         }
 
         .nav-btn {
-            background-color: #d2691e;
+            background-color: #1E1E1E;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -90,53 +133,115 @@
         }
 
         .nav-btn:hover {
-            background-color: #b3581b;
+            background-color: #3A3A3C;
         }
 
         .nav-btn.active {
-            background-color: #a0522d;
+            background-color: #FFD700;
         }
 
-        h2 {
-            color: #d2691e;
+        #coin-counter-panel {
+            background-color: #3A3A3C;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
 
-        p {
-            color: #6b4226;
+        #coin-counter {
+            font-size: 32px;
+            color: #FFD700;
+        }
+
+        #energy-counter {
             font-size: 18px;
+            color: #FFA500;
+            margin-top: 5px;
+        }
+
+        .page-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        .earn-link {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #1E1E1E;
+            color: #FFA500;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .earn-link:hover {
+            background-color: #3A3A3C;
+        }
+
+        .quest-check {
+            visibility: hidden;
+            color: #32CD32;
+            font-size: 18px;
+            margin-left: 5px;
+        }
+
+        .earn-link.completed {
+            pointer-events: none;
+            color: #808080;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="main-page" class="page active">
-            <div class="click-area">
-                <img src="https://via.placeholder.com/200" id="pig-image" alt="Pig Image">
+        <div class="header-stats">
+            <div class="header-stat earn-per-tap">
+                Earn per tap
+                <span id="earn-per-tap" class="header-stat-value">+1</span>
             </div>
-            <div class="stats">
-                <div class="stat">
-                    <span>Клики: </span>
-                    <span id="click-counter">0</span>
-                </div>
-                <div class="stat">
-                    <span>Коины: </span>
-                    <span id="coin-counter">0</span>
-                </div>
-                <div class="stat">
-                    <span>Добыча в час: </span>
-                    <span id="hourly-yield">0</span>
-                </div>
+            <div class="header-stat coins-to-levels">
+                Coins to levels tap
+                <span id="coins-to-levels" class="header-stat-value">0</span>
+            </div>
+            <div class="header-stat profit-per-hour">
+                Profit per hour
+                <span id="profit-per-hour" class="header-stat-value">0</span>
+            </div>
+        </div>
+
+        <div id="coin-counter-panel">
+            <div id="coin-counter">0</div>
+            <div id="energy-counter">Energy: 6000 / 6000</div>
+        </div>
+
+        <div id="main-page" class="page active">
+            <div class="click-area" id="click-area">
+                <img src="https://via.placeholder.com/150" id="pig-image" alt="Pig Image">
             </div>
         </div>
 
         <div id="friends-page" class="page">
-            <h2>Friends Page</h2>
-            <p>Здесь будут отображаться друзья.</p>
+            <div class="page-content">
+                <h2>Friends Page</h2>
+                <p>Здесь будут отображаться друзья.</p>
+            </div>
         </div>
 
         <div id="earn-page" class="page">
-            <h2>Earn Page</h2>
-            <p>Здесь можно заработать больше коинов.</p>
+            <div class="page-content">
+                <h2>Earn Page</h2>
+                <a href="#" class="earn-link" id="youtube-link" data-reward="5000">YouTube - Награда: 5,000 коинов</a>
+                <span id="youtube-check" class="quest-check">✔</span>
+                <br>
+                <a href="#" class="earn-link" id="vk-link" data-reward="5000">VK - Награда: 5,000 коинов</a>
+                <span id="vk-check" class="quest-check">✔</span>
+                <br>
+                <a href="#" class="earn-link" id="telegram-link" data-reward="5000">Telegram - Награда: 5,000 коинов</a>
+                <span id="telegram-check" class="quest-check">✔</span>
+            </div>
         </div>
 
         <div class="navbar">
@@ -145,15 +250,18 @@
             <button id="earn-btn" class="nav-btn">Earn</button>
         </div>
     </div>
+
     <script>
-        let clickCounter = 0;
         let coinCounter = 0;
-        let hourlyYield = 0;
+        let energy = 6000;
+        const maxEnergy = 6000;
+        const energyCostPerClick = 5;
+        const energyRestoreRate = 1000; // 1000 milliseconds = 1 second
 
         const pigImage = document.getElementById('pig-image');
-        const clickCounterDisplay = document.getElementById('click-counter');
+        const clickArea = document.getElementById('click-area');
         const coinCounterDisplay = document.getElementById('coin-counter');
-        const hourlyYieldDisplay = document.getElementById('hourly-yield');
+        const energyCounterDisplay = document.getElementById('energy-counter');
 
         const mainPage = document.getElementById('main-page');
         const friendsPage = document.getElementById('friends-page');
@@ -163,56 +271,92 @@
         const friendsBtn = document.getElementById('friends-btn');
         const earnBtn = document.getElementById('earn-btn');
 
+        const earnLinks = document.querySelectorAll('.earn-link');
+        const questChecks = document.querySelectorAll('.quest-check');
+
         pigImage.addEventListener('click', () => {
-            clickCounter++;
-            coinCounter += 1; // Допустим, за каждый клик даётся 10 коинов
-            updateDisplay(clickCounterDisplay, clickCounter);
-            updateDisplay(coinCounterDisplay, coinCounter);
+            if (energy >= energyCostPerClick) {
+                coinCounter += 1;
+                energy -= energyCostPerClick;
+                updateDisplay(coinCounterDisplay, coinCounter);
+                updateDisplay(energyCounterDisplay, `Energy: ${energy} / ${maxEnergy}`);
+                showFloatingText("+1");
+            }
         });
 
-        function updateDisplay(element, value) {
-            element.textContent = value;
-            element.classList.add('animated-counter');
-            setTimeout(() => {
-                element.classList.remove('animated-counter');
-            }, 500);
+        earnLinks.forEach((link, index) => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!link.classList.contains('completed')) {
+                    const reward = parseInt(link.getAttribute('data-reward'), 10);
+                    coinCounter += reward;
+                    updateDisplay(coinCounterDisplay, coinCounter);
+                    alert(`Вы получили ${reward} коинов!`);
+
+                    // Помечаем квест как выполненный
+                    link.classList.add('completed');
+                    questChecks[index].style.visibility = 'visible';
+                }
+            });
+        });
+
+    // Функция для восстановления энергии
+    function restoreEnergy() {
+        if (energy < maxEnergy) {
+            energy += 1;
+            updateDisplay(energyCounterDisplay, `Energy: ${energy} / ${maxEnergy}`);
         }
+    }
 
-        // Обновление добычи в час
-        setInterval(() => {
-            coinCounter += hourlyYield;
-            updateDisplay(coinCounterDisplay, coinCounter);
-        }, 3600000); // Обновление каждый час (3600000 миллисекунд)
+    // Устанавливаем таймер для восстановления энергии каждую секунду
+    setInterval(restoreEnergy, energyRestoreRate);
 
-        // Навигация между страницами
-        mainBtn.addEventListener('click', () => {
-            showPage(mainPage);
-            setActiveButton(mainBtn);
-        });
+    function updateDisplay(element, value) {
+        element.textContent = value;
+    }
 
-        friendsBtn.addEventListener('click', () => {
-            showPage(friendsPage);
-            setActiveButton(friendsBtn);
-        });
+    function showFloatingText(text) {
+        const floatingText = document.createElement('div');
+        floatingText.className = 'floating-text';
+        floatingText.textContent = text;
+        clickArea.appendChild(floatingText);
 
-        earnBtn.addEventListener('click', () => {
-            showPage(earnPage);
-            setActiveButton(earnBtn);
-        });
+        const x = Math.random() * 100 - 50;
+        const y = Math.random() * 50 - 25;
+        floatingText.style.left = `${x}px`;
+        floatingText.style.top = `${y}px`;
 
-        function showPage(page) {
-            mainPage.classList.remove('active');
-            friendsPage.classList.remove('active');
-            earnPage.classList.remove('active');
-            page.classList.add('active');
-        }
+        setTimeout(() => {
+            floatingText.remove();
+        }, 1000);
+    }
 
-        function setActiveButton(button) {
-            mainBtn.classList.remove('active');
-            friendsBtn.classList.remove('active');
-            earnBtn.classList.remove('active');
-            button.classList.add('active');
-        }
-    </script>
+    mainBtn.addEventListener('click', () => {
+        mainBtn.classList.add('active');
+        friendsBtn.classList.remove('active');
+        earnBtn.classList.remove('active');
+        mainPage.classList.add('active');
+        friendsPage.classList.remove('active');
+        earnPage.classList.remove('active');
+    });
+
+    friendsBtn.addEventListener('click', () => {
+        mainBtn.classList.remove('active');
+        friendsBtn.classList.add('active');
+        earnBtn.classList.remove('active');
+        mainPage.classList.remove('active');
+        friendsPage.classList.add('active');
+        earnPage.classList.remove('active');
+    });
+
+    earnBtn.addEventListener('click', () => {
+        mainBtn.classList.remove('active');
+        friendsBtn.classList.remove('active');
+        earnBtn.classList.add('active');
+        mainPage.classList.remove('active');
+        friendsPage.classList.remove('active');
+        earnPage.classList.add('active');
+    });
+</script>
 </body>
 </html>
