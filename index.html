@@ -3,218 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Counter with Slot Machine Animation</title>
+    <title>Telegram Clicker</title>
     <style>
         body {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            background: url('https://sotni.ru/wp-content/uploads/2023/08/zadnii-fon-dlia-platformera-1.webp') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
+            background-color: #f0f0f0;
         }
-        @media (max-width: 600px) {
-            body {
-                background: url('https://sotni.ru/wp-content/uploads/2023/08/zadnii-fon-dlia-platformera-1.webp') no-repeat center center fixed;
-                background-size: cover;
-                background-position: center;
-            }
-        }
-        #user-panel {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 10px;
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #ccc;
             border-radius: 10px;
-            width: calc(100% - 40px);
-            max-width: 800px;
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-        }
-        #username {
-            color: #fff;
-        }
-        #counter-panel {
-            background-color: rgba(0, 0, 0, 0.5);
             padding: 20px;
-            border-radius: 10px;
-            width: calc(100% - 40px);
-            max-width: 800px;
-            display: flex;
-            justify-content: center;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .click-area {
             margin-bottom: 20px;
-            margin-top: 10px;
-            transition: background-color 0.3s ease;
         }
-        #counter {
-            font-size: 3em;
-            overflow: hidden;
-            position: relative;
-            display: inline-block;
-        }
-        #click-area {
-            width: 300px;
-            height: 300px;
-            background: url('https://kartinki.pics/uploads/posts/2022-12/1670573144_1-kartinkin-net-p-monetki-kartinka-vkontakte-1.png') no-repeat center center;
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
+
+        #pig-image {
+            width: 200px;
             cursor: pointer;
-            user-select: none;
-            transition: transform 0.1s ease;
-            margin: 20px 0;
-            z-index: 10;
         }
-        #click-area:hover {
-            transform: scale(1.1);
-        }
-        .number-animation {
-            position: absolute;
-            font-size: 2em;
-            font-weight: bold;
-            color: #FFD700;
-            pointer-events: none;
-            z-index: 1000;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-        }
-        .button-panel {
-            position: fixed;
-            bottom: 10px;
-            width: calc(100% - 40px);
-            max-width: 800px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            padding: 10px;
+
+        .stats {
             display: flex;
-            justify-content: space-around;
+            flex-direction: column;
             align-items: center;
-            left: 50%;
-            transform: translateX(-50%);
         }
-        .button {
-            width: 80px;
-            height: 40px;
-            background-color: #444;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 10px;
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            border: 2px solid #555;
-            color: white;
-            font-size: 0.9em;
+
+        .stat {
+            margin: 10px 0;
+            font-size: 24px;
         }
-        .button:focus {
-            outline: none;
+
+        .animated-counter {
+            animation: counter 0.5s ease-in-out;
         }
-        .button:hover {
-            transform: translateY(-5px);
-        }
-        .button:active {
-            transform: translateY(0);
-            background-color: #333;
-            border-color: #333;
-        }
-        .animate {
-            animation: button-click 0.2s ease;
-        }
-        @keyframes button-click {
+
+        @keyframes counter {
             0% { transform: scale(1); }
-            50% { transform: scale(0.9); }
+            50% { transform: scale(1.5); }
             100% { transform: scale(1); }
         }
-        .spin-animation {
-            animation: spin 1s ease-out;
+
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
         }
-        @keyframes spin {
-            0% { transform: rotateX(0); }
-            100% { transform: rotateX(360deg); }
+
+        .nav-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
-        .number-animation {
-            animation: number-fly 1s forwards cubic-bezier(0.3, 0, 0.4, 1);
+
+        .nav-btn:hover {
+            background-color: #45a049;
         }
-        @keyframes number-fly {
-            0% { transform: translateY(0); opacity: 1; }
-            50% { transform: translateY(-100px); opacity: 1; }
-            100% { transform: translateY(-200px); opacity: 0; }
+
+        .nav-btn.active {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <div id="user-panel">
-        <div id="username">Username</div>
-    </div>
-    <div id="counter-panel">
-        <div id="counter">0</div>
-    </div>
-    <div id="click-area" onclick="incrementCounter()">
-    </div>
-    <div class="button-panel">
-        <div class="button farm" onclick="animateButton(this)">
-            Farm
+    <div class="container">
+        <div id="main-page" class="page active">
+            <div class="click-area">
+                <img src="https://via.placeholder.com/200" id="pig-image" alt="Pig Image">
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <span>Клики: </span>
+                    <span id="click-counter">0</span>
+                </div>
+                <div class="stat">
+                    <span>Коины: </span>
+                    <span id="coin-counter">0</span>
+                </div>
+                <div class="stat">
+                    <span>Добыча в час: </span>
+                    <span id="hourly-yield">0</span>
+                </div>
+            </div>
         </div>
-        <div class="button mine" onclick="animateButton(this)">
-            Mine
-        </div>
-        <div class="button friend" onclick="animateButton(this)">
-            Friend
-        </div>
-        <div class="button earn" onclick="animateButton(this)">
-            Earn
-        </div>
-        <div class="button airdrop" onclick="animateButton(this)">
-            Airdrop
-        </div>
-    </div>
 
+        <div id="friends-page" class="page">
+            <h2>Friends Page</h2>
+            <p>Здесь будут отображаться друзья.</p>
+        </div>
+
+        <div id="earn-page" class="page">
+            <h2>Earn Page</h2>
+            <p>Здесь можно заработать больше коинов.</p>
+        </div>
+
+        <div class="navbar">
+            <button id="main-btn" class="nav-btn active">Main</button>
+            <button id="friends-btn" class="nav-btn">Friends</button>
+            <button id="earn-btn" class="nav-btn">Earn</button>
+        </div>
+    </div>
     <script>
-        let counter = 0;
+        let clickCounter = 0;
+        let coinCounter = 0;
+        let hourlyYield = 0;
 
-        function incrementCounter() {
-            counter++;
-            let numberAnimation = document.createElement('div');
-            numberAnimation.innerText = '+1';
-            numberAnimation.classList.add('number-animation');
-            document.body.appendChild(numberAnimation);
+        const pigImage = document.getElementById('pig-image');
+        const clickCounterDisplay = document.getElementById('click-counter');
+        const coinCounterDisplay = document.getElementById('coin-counter');
+        const hourlyYieldDisplay = document.getElementById('hourly-yield');
 
-            let clickAreaRect = document.getElementById('click-area').getBoundingClientRect();
-            let offsetX = (Math.random() - 0.5) * 100;
-            let offsetY = (Math.random() - 0.5) * 100;
-            let randomX = clickAreaRect.left + clickAreaRect.width / 2 + offsetX;
-            let randomY = clickAreaRect.top + clickAreaRect.height / 2 + offsetY;
+        const mainPage = document.getElementById('main-page');
+        const friendsPage = document.getElementById('friends-page');
+        const earnPage = document.getElementById('earn-page');
 
-            numberAnimation.style.left = randomX + 'px';
-            numberAnimation.style.top = randomY + 'px';
+        const mainBtn = document.getElementById('main-btn');
+        const friendsBtn = document.getElementById('friends-btn');
+        const earnBtn = document.getElementById('earn-btn');
 
+        pigImage.addEventListener('click', () => {
+            clickCounter++;
+            coinCounter += 10; // Допустим, за каждый клик даётся 10 коинов
+            updateDisplay(clickCounterDisplay, clickCounter);
+            updateDisplay(coinCounterDisplay, coinCounter);
+        });
+
+        function updateDisplay(element, value) {
+            element.textContent = value;
+            element.classList.add('animated-counter');
             setTimeout(() => {
-                numberAnimation.style.opacity = '1';
-                numberAnimation.style.transform = 'translate(-50%, -50%) scale(1)';
-            }, 50);
-
-            setTimeout(() => {
-                numberAnimation.style.opacity = '0';
-                numberAnimation.style.transform = 'translate(-50%, -50%) scale(0)';
-                setTimeout(() => {
-                    numberAnimation.remove();
-                }, 500);
-            }, 1000);
-
-            document.getElementById('counter').innerText = counter;
+                element.classList.remove('animated-counter');
+            }, 500);
         }
 
-        function animateButton(button) {
-            button.classList.add('animate');
-            setTimeout(() => {
-                button.classList.remove('animate');
-            }, 200);
+        // Обновление добычи в час
+        setInterval(() => {
+            coinCounter += hourlyYield;
+            updateDisplay(coinCounterDisplay, coinCounter);
+        }, 3600000); // Обновление каждый час (3600000 миллисекунд)
+
+        // Навигация между страницами
+        mainBtn.addEventListener('click', () => {
+            showPage(mainPage);
+            setActiveButton(mainBtn);
+        });
+
+        friendsBtn.addEventListener('click', () => {
+            showPage(friendsPage);
+            setActiveButton(friendsBtn);
+        });
+
+        earnBtn.addEventListener('click', () => {
+            showPage(earnPage);
+            setActiveButton(earnBtn);
+        });
+
+        function showPage(page) {
+            mainPage.classList.remove('active');
+            friendsPage.classList.remove('active');
+            earnPage.classList.remove('active');
+            page.classList.add('active');
+        }
+
+        function setActiveButton(button) {
+            mainBtn.classList.remove('active');
+            friendsBtn.classList.remove('active');
+            earnBtn.classList.remove('active');
+            button.classList.add('active');
         }
     </script>
 </body>
